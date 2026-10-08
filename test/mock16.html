@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<style>
+  @page { size: A4; margin: 22mm 20mm; }
+  body { font-family: "SimSun", "Microsoft YaHei", serif; font-size: 12pt; line-height: 1.9; color: #111; }
+  .header { text-align: center; font-weight: bold; font-size: 14pt; margin-bottom: 4pt; }
+  .sub { text-align: center; color: #333; font-size: 10.5pt; margin-bottom: 14pt; }
+  .sec { font-weight: bold; margin: 10pt 0 4pt; }
+  .q { text-indent: -2em; margin-left: 2em; }
+  .pagebreak { page-break-before: always; }
+  .footer { margin-top: 24pt; text-align: center; color: #555; font-size: 9pt; }
+</style>
+</head>
+<body>
+<div class="header">第十六届全国大学生数学竞赛（非数学类 A 类）</div>
+<div class="sub">考试时间：120 分钟　满分：100 分　（测试样卷，仅供「罚题器」功能测试使用）</div>
+
+<div class="sec">一、填空题（每小题 5 分，共 25 分）</div>
+<div class="q">1. 设函数 f(x) = x² + 2x，则 f′(1) = ______。</div>
+<div class="q">2. 极限 lim(x→0) sin3x / x = ______。</div>
+<div class="q">3. 设 z = x²y + e^(xy)，则 ∂z/∂x = ______。</div>
+<div class="q">4. 微分方程 y″ + 4y = 0 的通解为 ______。</div>
+<div class="q">5. 幂级数 Σ xⁿ/n 的收敛半径 R = ______。</div>
+
+<div class="sec">二、解答题（共 75 分）</div>
+<div class="q">6.（15 分）求曲线 y = x³ − 3x² + 1 的凹凸区间与拐点。</div>
+<div class="q">7.（15 分）计算二重积分 ∬_D (x + y) dxdy，其中 D 由 y = x² 与 y = 1 围成。</div>
+<div class="q">8.（15 分）证明：当 x &gt; 0 时，e^x &gt; 1 + x。</div>
+<div class="q">9.（15 分）设 A 为 3 阶实对称矩阵，其特征值为 1, 2, 3，求 |A²|。</div>
+<div class="q">10.（15 分）求微分方程 y″ − 2y′ + y = e^x 满足 y(0) = 1, y′(0) = 0 的特解。</div>
+<div class="footer">第十六届全国大学生数学竞赛（非数学类A类）测试样卷 · 第 1 页</div>
+
+<div class="pagebreak"></div>
+<div class="header">第十六届全国大学生数学竞赛（非数学类 A 类）</div>
+<div class="sub">参考答案与评分标准（测试样卷）</div>
+
+<div class="sec">一、填空题</div>
+<div class="q">1. 4。</div>
+<div class="q">2. 3。</div>
+<div class="q">3. 2xy + y·e^(xy)。</div>
+<div class="q">4. y = C₁cos2x + C₂sin2x（C₁, C₂ 为任意常数）。</div>
+<div class="q">5. R = 1。</div>
+
+<div class="sec">二、解答题</div>
+<div class="q">6. 解：y′ = 3x² − 6x，y″ = 6x − 6。令 y″ = 0 得 x = 1。当 x &lt; 1 时曲线上凸，x &gt; 1 时下凸（凹），拐点为 (1, −1)。</div>
+<div class="q">7. 解：化为二次积分，∫₀¹ dx ∫(x²→1) (x + y) dy = ∫₀¹ [x(1 − x²) + (1 − x⁴)/2] dx = 4/5。</div>
+<div class="q">8. 证：设 f(x) = e^x − 1 − x，则 f′(x) = e^x − 1 &gt; 0（x &gt; 0），又 f(0) = 0，故当 x &gt; 0 时 f(x) &gt; 0，即 e^x &gt; 1 + x。</div>
+<div class="q">9. 解：|A| = 1 × 2 × 3 = 6，故 |A²| = |A|² = 36。</div>
+<div class="q">10. 解：齐次方程通解为 y = (C₁ + C₂x)e^x。设特解 y* = ax²e^x，代入得 a = 1/2。由 y(0) = 1 得 C₁ = 1，y′(0) = 0 得 C₂ = 0。故特解 y = (1 + x²/2)e^x。</div>
+<div class="footer">第十六届全国大学生数学竞赛（非数学类A类）测试样卷 · 第 2 页</div>
+</body>
+</html>

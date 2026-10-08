@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>罚题器</title>
+<link rel="stylesheet" href="./style.css">
+</head>
+<body>
+
+<header>
+  <div class="brand">📝 罚题器<small>刷题 · 计时 · 自罚</small></div>
+  <nav>
+    <button class="tab active" id="tab-bank">📚 题库</button>
+    <button class="tab" id="tab-practice">⚔️ 开始罚题</button>
+  </nav>
+  <div class="conn" id="conn"><span class="dot"></span>未连接服务</div>
+</header>
+
+<main>
+  <!-- ============ 题库视图 ============ -->
+  <section class="view active" id="view-bank">
+    <aside id="cat-side">
+      <div class="side-title">题目类别</div>
+      <div id="cat-list"></div>
+      <button class="ghost" id="btn-add-cat">＋ 新建类别</button>
+    </aside>
+
+    <div class="bank-main">
+      <div id="drop-zone" title="点击选择文件">
+        <div class="dz-icon">📄⬆️</div>
+        <div class="dz-text">把试卷 PDF / Word 拖到这里上传（也可以点击选择文件）</div>
+        <div class="dz-sub">支持 .pdf / .docx / .doc · 上传后自动拆题并提取答案，校对无误再入库</div>
+        <input type="file" id="file-input" multiple accept=".pdf,.docx,.doc" hidden>
+      </div>
+      <div id="sets-area"></div>
+    </div>
+  </section>
+
+  <!-- ============ 刷题设置视图 ============ -->
+  <section class="view" id="view-practice">
+    <div class="panel">
+      <h3>① 选择类别与套卷</h3>
+      <div class="p-row">
+        <span class="p-label">类别</span>
+        <select id="p-cat" style="padding:7px 10px;border:1px solid var(--line);border-radius:8px;"></select>
+      </div>
+      <div class="p-sets" id="p-sets"></div>
+      <div>
+        <button class="mini" id="p-all">全选</button>
+        <button class="mini" id="p-none">清空</button>
+        <span id="p-pool-info" class="p-label" style="min-width:0;"></span>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3>② 抽多少道题</h3>
+      <div class="p-row">
+        <span class="p-label">题目数量</span>
+        <input type="number" class="num-input" id="p-count" value="3" min="1" max="999">
+        <button class="chip" data-count="3">3 道</button>
+        <button class="chip" data-count="5">5 道</button>
+        <button class="chip" data-count="10">10 道</button>
+        <button class="chip" data-count="20">20 道</button>
+        <button class="chip" data-count="all">全部</button>
+      </div>
+      <p class="p-label" style="min-width:0;margin-top:8px;">所选套卷的题目会合并后随机抽取（可能全部来自同一套）。</p>
+    </div>
+
+    <div class="panel">
+      <h3>③ 限时</h3>
+      <div class="p-row">
+        <span class="p-label">总时长</span>
+        <input type="number" class="num-input" id="p-time" value="60" min="0">
+        <span class="p-label" style="min-width:0;">分钟</span>
+        <button class="chip" data-time="10">10 分钟</button>
+        <button class="chip" data-time="30">30 分钟</button>
+        <button class="chip" data-time="60">60 分钟</button>
+        <button class="chip" data-time="90">90 分钟</button>
+        <button class="chip" data-time="0">不限时</button>
+      </div>
+      <p class="p-label" style="min-width:0;margin-top:8px;">填 0 表示不限时；时间一到会自动交卷。</p>
+    </div>
+
+    <div style="text-align:center;margin-top:18px;">
+      <button class="btn big" id="btn-start">⚔️ 开始罚题</button>
+    </div>
+  </section>
+</main>
+
+<!-- ============ 刷题会话（全屏） ============ -->
+<div id="session" class="hidden">
+  <div class="s-wrap">
+    <div class="s-top">
+      <div id="s-timer">--:--</div>
+      <button class="btn ghost small" id="s-pause">⏸ 暂停</button>
+      <div class="spacer"></div>
+      <button class="btn ghost small" id="s-quit">✕ 放弃本次</button>
+    </div>
+    <div class="s-progress" id="s-progress"></div>
+    <div class="s-card" id="s-card">
+      <div class="s-meta">
+        <span class="badge" id="s-setname"></span>
+        <span id="s-idx"></span>
+      </div>
+      <div class="s-stem" id="s-stem"></div>
+      <div class="s-actions">
+        <button class="btn ghost" id="s-show">👁 显示答案</button>
+      </div>
+      <div class="s-answer hidden" id="s-answer"></div>
+      <div class="s-judge hidden" id="s-judge">
+        <span class="p-label" style="min-width:0;">自判：</span>
+        <button class="btn small" id="s-right" style="background:var(--ok);">✓ 答对了</button>
+        <button class="btn small danger" id="s-wrong">✗ 答错了</button>
+        <span class="done" id="s-judged"></span>
+      </div>
+    </div>
+    <div class="s-nav">
+      <button class="btn ghost" id="s-prev">← 上一题</button>
+      <button class="btn" id="s-next">下一题 →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 结果页（全屏复用 session 容器） ============ -->
+<div id="result" class="hidden">
+  <div class="s-wrap">
+    <div class="result-hero">
+      <div class="big" id="r-title">交卷！</div>
+      <div class="result-stats">
+        <div class="st"><b id="r-used">--</b><span>用时</span></div>
+        <div class="st"><b id="r-right" style="color:var(--ok);">0</b><span>答对</span></div>
+        <div class="st"><b id="r-wrong" style="color:var(--bad);">0</b><span>答错</span></div>
+        <div class="st"><b id="r-skip" style="color:var(--ink-2);">0</b><span>未判</span></div>
+      </div>
+    </div>
+    <div class="result-list" id="r-list"></div>
+    <div style="display:flex;gap:10px;justify-content:center;margin-top:20px;flex-wrap:wrap;">
+      <button class="btn" id="r-redo-wrong">🔁 只重刷错题</button>
+      <button class="btn ghost" id="r-again">再来一轮</button>
+      <button class="btn ghost" id="r-back">返回</button>
+    </div>
+  </div>
+</div>
+
+<div id="modal-layer" class="hidden"></div>
+<div id="toast"></div>
+
+<script src="./libs/pdf.min.js"></script>
+<script src="./libs/mammoth.browser.min.js"></script>
+<script src="./app.js"></script>
+</body>
+</html>

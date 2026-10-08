@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta charset="UTF-8"><title>null-origin file-mode 模拟测试</title></head>
+<body>
+<p>本页用 sandbox iframe 复现 file:// 的 null 源环境，测试罚题器的两大机制。</p>
+<div id="out">等待 iframe 结果…</div>
+<iframe sandbox="allow-scripts" style="display:none" srcdoc="
+<script>
+(async () => {
+  const out = {};
+  // 1) null 源 fetch → 127.0.0.1:8765 API（file 模式的连接探测）
+  try {
+    const r = await fetch('http://127.0.0.1:8765/api/ping', {cache:'no-store'});
+    const j = await r.json();
+    out.ping = { ok: j.ok === true, app: j.app };
+  } catch (e) { out.ping = { ok: false, err: String(e) }; }
+  // 2) null 源下取 worker 代码并创建 blob Worker（pdf.js 的 worker 方案）
+  try {
+    const res = await fetch('http://127.0.0.1:8765/libs/pdf.worker.min.js');
+    const code = await res.text();
+    const url = URL.createObjectURL(new Blob([code], {type:'text/javascript'}));
+    let workerOk = false, workerErr = '';
+    try {
+      const w = new Worker(url);
+      w.onerror = () => {};
+      workerOk = true;
+      w.terminate();
+    } catch (e) { workerErr = String(e); }
+    out.worker = { ok: workerOk, err: workerErr, codeLen: code.length };
+  } catch (e) { out.worker = { ok: false, err: String(e) }; }
+  parent.postMessage({type:'nullOriginResult', out}, '*');
+})();
+</script>"></iframe>
+<script>
+window.addEventListener("message", ev => {
+  if (ev.data && ev.data.type === "nullOriginResult") {
+    window.__nullOriginResult = ev.data.out;
+    document.getElementById("out").textContent = JSON.stringify(ev.data.out);
+  }
+});
+</script>
+</body>
+</html>
